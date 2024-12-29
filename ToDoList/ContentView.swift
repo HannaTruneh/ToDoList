@@ -9,10 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State  private var tasks = [String]()
+    @State private var tasks = [String]()
     @State private var newTask = ""
-    @State private var isShoeingSheet = false
-    
+    @State private var isShowingSheet = false
     
     var body: some View {
         NavigationStack {
@@ -24,13 +23,30 @@ struct ContentView: View {
                 }
                 .navigationTitle("To-Do List")
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Text("Add")
-                            .bold()
-                    }
                     
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Text("Edit")
+                            .foregroundStyle(Color.blue)
+                    }
+                    
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            isShowingSheet.toggle()
+                        }) {
+                            Text("Add")
+                                .bold()
+                        }
+                    }
+                }
+                .sheet(isPresented: $isShowingSheet) {
+                    VStack {
+                        Text("It's a sheet")
+                        Button(action: {
+                            print("")
+                        }) {
+                            Text("Add Task")
+                            
+                        }
                     }
                 }
             }
@@ -38,13 +54,16 @@ struct ContentView: View {
     }
 }
 
-func addTask() {
-    if newTask.isEmpty {
-        tasks.append(newTask)
-        newTask = ""
-    }
-}
-
 #Preview {
     ContentView()
 }
+       
+        //            func addTask() {
+        //                if newTask.isEmpty {
+        //                    tasks.append(newTask)
+        //                    newTask = ""
+        //                }
+        //            }
+        
+        
+   
