@@ -8,14 +8,40 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State  private var tasks = [String]()
+    @State private var newTask = ""
+    @State private var isShoeingSheet = false
+    
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            VStack {
+                List {
+                    ForEach(tasks, id: \.self) { task in
+                        Text(task)
+                    }
+                }
+                .navigationTitle("To-Do List")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Text("Add")
+                            .bold()
+                    }
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Text("Edit")
+                    }
+                }
+            }
         }
-        .padding()
+    }
+}
+
+func addTask() {
+    if newTask.isEmpty {
+        tasks.append(newTask)
+        newTask = ""
     }
 }
 
