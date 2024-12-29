@@ -2,7 +2,7 @@
 //  ToDoListUITestsLaunchTests.swift
 //  ToDoListUITests
 //
-//  Created by Shay Shimony on 29/12/2024.
+//  Created by Hanna Truneh on 29/12/2024.
 //
 
 import XCTest
