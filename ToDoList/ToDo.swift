@@ -1,7 +1,11 @@
-import Foundation
 
-struct ToDo: Identifiable {
-    var id = UUID() 
+
+
+import Foundation
+import SwiftData
+
+@Model
+final class ToDo {
     var title: String
     var deadline: Date
     
@@ -10,3 +14,4 @@ struct ToDo: Identifiable {
         self.deadline = deadline
     }
 }
+

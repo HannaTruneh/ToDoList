@@ -16,7 +16,7 @@ struct ToDoList: View {
         NavigationView {
             VStack {
                 List {
-                    ForEach(todos) { todo in
+                    ForEach(todos, id: \.id.self) { todo in
                         VStack(alignment: .leading) {
                             Text(todo.title)
                                 .font(.headline)
