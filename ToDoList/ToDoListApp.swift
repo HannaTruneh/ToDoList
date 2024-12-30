@@ -1,9 +1,3 @@
-//
-//  ToDoListApp.swift
-//  ToDoList
-//
-//  Created by Hanna Truneh on 29/12/2024.
-//
 
 import SwiftUI
 
@@ -11,7 +5,10 @@ import SwiftUI
 struct ToDoListApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ToDoList()
         }
     }
 }
+
+
+
