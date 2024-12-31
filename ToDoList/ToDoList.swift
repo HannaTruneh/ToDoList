@@ -1,16 +1,17 @@
 
 
 import SwiftUI
+import SwiftData
 
 struct ToDoList: View {
     
-    @State private var todos: [ToDo] = [
-        ToDo(title: "call Ari", deadline: Date()),
-        ToDo(title: "Do testing", deadline: Date())
-    ]
+    @Query private var todos: [ToDo]
+    
     @State private var newTodo = ""
     @State private var newTodoDeadline = Date()
     @State private var isShowingSheet = false
+    
+    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         NavigationView {
@@ -53,7 +54,8 @@ struct ToDoList: View {
                         Button("Save") {
                             if !newTodo.isEmpty {
                                 let newToDo = ToDo(title: newTodo, deadline: newTodoDeadline)
-                                todos.append(newToDo)
+                                modelContext.insert(newToDo)
+                                                                
                                 newTodo = ""
                                 isShowingSheet = false
                             }
@@ -66,6 +68,7 @@ struct ToDoList: View {
         }
     }
     
+    
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -73,6 +76,10 @@ struct ToDoList: View {
     }
 }
 
+
+
+
 #Preview {
     ToDoList()
+        .modelContainer(for: ToDo.self, inMemory: true)
 }
