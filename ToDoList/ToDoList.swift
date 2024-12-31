@@ -5,27 +5,27 @@ import SwiftData
 
 struct ToDoList: View {
     
-    @Query private var todos: [ToDo]
+    @StateObject private var viewModel = ToDoListViewModel()
     
     @State private var newTodo = ""
     @State private var newTodoDeadline = Date()
     @State private var isShowingSheet = false
     
-    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         NavigationView {
             VStack {
                 List {
-                    ForEach(todos, id: \.id.self) { todo in
+                    ForEach(viewModel.todos) { todo in
                         VStack(alignment: .leading) {
                             Text(todo.title)
                                 .font(.headline)
-                            Text("Deadline: \(todo.deadline, formatter: dateFormatter)")
+                            Text("Deadline: \(formattedDate(todo.deadline))")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                         }
                     }
+                    .onDelete(perform: deleteToDo)
                 }
                 .navigationTitle("To-Do List")
                 .toolbar {
@@ -36,7 +36,7 @@ struct ToDoList: View {
                             Image(systemName: "plus")
                         }
                     }
-                
+                    
                     ToolbarItem(placement: .navigationBarTrailing) {
                         EditButton()
                     }
@@ -47,15 +47,13 @@ struct ToDoList: View {
                             .bold()
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
-    
+                        
                         DatePicker("Select Deadline", selection: $newTodoDeadline, displayedComponents: .date)
                             .padding()
                         
                         Button("Save") {
                             if !newTodo.isEmpty {
-                                let newToDo = ToDo(title: newTodo, deadline: newTodoDeadline)
-                                modelContext.insert(newToDo)
-                                                                
+                                viewModel.addNewToDo(title: newTodo, deadline: newTodoDeadline)
                                 newTodo = ""
                                 isShowingSheet = false
                             }
@@ -69,13 +67,17 @@ struct ToDoList: View {
     }
     
     
-    private var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter
+    private func deleteToDo(at offsets: IndexSet) {
+        viewModel.deleteToDo(at: offsets)
+    }
+    
+    
+    private func formattedDate(_ date: Date) -> String {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            return formatter.string(from: date)
     }
 }
-
 
 
 
