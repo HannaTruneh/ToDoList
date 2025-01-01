@@ -1,12 +1,7 @@
-//
-//  TodoRowView.swift
-//  ToDoList
-//
-//  Created by Shay Shimony on 01/01/2025.
-//
 
 
-import Foundation
+
+
 import SwiftUI
 
 struct SaveButton: View {
