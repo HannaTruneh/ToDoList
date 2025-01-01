@@ -1,8 +1,8 @@
-
-
 import Foundation
 import SwiftData
 import SwiftUICore
+
+
 
 class ToDoListViewModel: ObservableObject {
     @Published var todos: [ToDo] = []
@@ -23,9 +23,3 @@ class ToDoListViewModel: ObservableObject {
     }
     
 }
-    
-    
-
-    
-
-

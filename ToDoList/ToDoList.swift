@@ -28,10 +28,7 @@ struct ToDoList: View {
                     .onDelete(perform: deleteToDo)
                 }
                 
-                
                 .navigationTitle("To-Do List")
-                
-                
                 
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -71,17 +68,12 @@ struct ToDoList: View {
                                 newTodo = ""
                                 isShowingSheet = false
                             }
-                        }) {
-                            Text("Save")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .font(.headline)
-                                .cornerRadius(10)
-                                .bold()
+                        }){
+                            
+                            SaveButton(text: "Save")
+                            
                         }
-                        .padding(.horizontal)
+                        
                     }
                     .padding()
                 }
