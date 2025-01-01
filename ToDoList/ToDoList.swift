@@ -27,7 +27,12 @@ struct ToDoList: View {
                     }
                     .onDelete(perform: deleteToDo)
                 }
+                
+                
                 .navigationTitle("To-Do List")
+                
+                
+                
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
@@ -41,24 +46,42 @@ struct ToDoList: View {
                         EditButton()
                     }
                 }
+                
                 .sheet(isPresented: $isShowingSheet) {
-                    VStack {
+                    VStack(spacing: 20) {
+                        
+                        Spacer().frame(height: 10)
+                        
                         TextField("New Task", text: $newTodo)
-                            .bold()
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(10)
+                            .textFieldStyle(PlainTextFieldStyle())
                         
-                        DatePicker("Select Deadline", selection: $newTodoDeadline, displayedComponents: .date)
+                        DatePicker("Deadline", selection: $newTodoDeadline, displayedComponents: [.date, .hourAndMinute])
                             .padding()
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(10)
                         
-                        Button("Save") {
+                        Spacer()
+                        
+                        Button(action: {
                             if !newTodo.isEmpty {
                                 viewModel.addNewToDo(title: newTodo, deadline: newTodoDeadline)
                                 newTodo = ""
                                 isShowingSheet = false
                             }
+                        }) {
+                            Text("Save")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .font(.headline)
+                                .cornerRadius(10)
+                                .bold()
                         }
-                        .padding()
+                        .padding(.horizontal)
                     }
                     .padding()
                 }
@@ -71,11 +94,12 @@ struct ToDoList: View {
         viewModel.deleteToDo(at: offsets)
     }
     
-    
     private func formattedDate(_ date: Date) -> String {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            return formatter.string(from: date)
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+        
     }
 }
 
