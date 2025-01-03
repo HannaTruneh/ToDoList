@@ -10,9 +10,10 @@ struct ToDoList: View {
     @State var newTodoDeadline = Date()
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 List($viewModel.todos, id: \.self, editActions: .delete) { $todo in
+                    NavigationLink(value: todo) {
                     VStack(alignment: .leading) {
                         Text(todo.title)
                             .font(.headline)
@@ -21,7 +22,11 @@ struct ToDoList: View {
                             .foregroundColor(.gray)
                     }
                 }
+            }
                 .navigationTitle("To-Do List")
+                .navigationDestination(for: ToDo.self) { todo in
+                    EditToDoView(todo: todo)
+                }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
@@ -61,7 +66,7 @@ struct ToDoList: View {
                             saveAction(todo)
                         }
                         .disabled(newTodoTitle.isEmpty)
-                        .opacity(newTodoTitle.isEmpty ? 0.2 : 1.0)
+                        .opacity(newTodoTitle.isEmpty ? 0.5 : 1.0)
                     }
                     .presentationDetents([.medium, .large])
                     .padding()
