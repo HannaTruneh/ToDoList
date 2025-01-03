@@ -1,39 +1,31 @@
-
-
 import SwiftUI
 import SwiftData
+
 
 struct ToDoList: View {
     
     @StateObject private var viewModel = ToDoListViewModel()
-    
-    @State private var newTodo = ""
-    @State private var newTodoDeadline = Date()
-    @State private var isShowingSheet = false
-    
+    @State var newTodo: ToDo? = nil
+    @State var newTodoTitle = ""
+    @State var newTodoDeadline = Date()
     
     var body: some View {
         NavigationView {
             VStack {
-                List {
-                    ForEach(viewModel.todos) { todo in
-                        VStack(alignment: .leading) {
-                            Text(todo.title)
-                                .font(.headline)
-                            Text("Deadline: \(formattedDate(todo.deadline))")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                        }
+                List($viewModel.todos, id: \.self, editActions: .delete) { $todo in
+                    VStack(alignment: .leading) {
+                        Text(todo.title)
+                            .font(.headline)
+                        Text("Deadline: \(String.formattedDate(todo.deadline))")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
                     }
-                    .onDelete(perform: deleteToDo)
                 }
-                
                 .navigationTitle("To-Do List")
-                
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
-                            isShowingSheet = true
+                            newTodo = ToDo(title: "", deadline: .now)
                         }) {
                             Image(systemName: "plus")
                         }
@@ -43,13 +35,14 @@ struct ToDoList: View {
                         EditButton()
                     }
                 }
-                
-                .sheet(isPresented: $isShowingSheet) {
+                .sheet(item: $newTodo, onDismiss: {
+                    newTodoTitle = ""
+                    newTodoDeadline = Date()
+                }) { todo in
                     VStack(spacing: 20) {
-                        
                         Spacer().frame(height: 10)
                         
-                        TextField("New Task", text: $newTodo)
+                        TextField("New Task", text: $newTodoTitle)
                             .padding()
                             .background(Color.gray.opacity(0.1))
                             .cornerRadius(10)
@@ -62,42 +55,46 @@ struct ToDoList: View {
                         
                         Spacer()
                         
-                        Button(action: {
-                            if !newTodo.isEmpty {
-                                viewModel.addNewToDo(title: newTodo, deadline: newTodoDeadline)
-                                newTodo = ""
-                                isShowingSheet = false
-                            }
-                        }){
-                            
-                            SaveButton(text: "Save")
-                            
+                        SaveButton(text: "Save") {
+                            todo.title = newTodoTitle
+                            todo.deadline = newTodoDeadline
+                            saveAction(todo)
                         }
-                        
+                        .disabled(newTodoTitle.isEmpty)
+                        .opacity(newTodoTitle.isEmpty ? 0.2 : 1.0)
                     }
+                    .presentationDetents([.medium, .large])
                     .padding()
                 }
             }
         }
     }
     
+    func saveAction(_ todo: ToDo) {
+        viewModel.addNewToDo(newTodo: todo)
+        newTodo = nil
+        newTodoTitle = ""
+        newTodoDeadline = Date()
+    }
     
     private func deleteToDo(at offsets: IndexSet) {
         viewModel.deleteToDo(at: offsets)
     }
-    
-    private func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
-        
-    }
 }
-
 
 
 #Preview {
     ToDoList()
         .modelContainer(for: ToDo.self, inMemory: true)
 }
+
+
+extension String {
+    static func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+}
+
