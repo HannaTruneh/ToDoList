@@ -19,7 +19,7 @@ struct ToDoListApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ToDoList()
+            ToDoListView()
         }
         .modelContainer(sharedModelContainer)
     }

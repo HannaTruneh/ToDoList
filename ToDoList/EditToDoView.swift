@@ -8,6 +8,9 @@ struct EditToDoView: View {
             Section {
                 TextField("Todo", text: $todo.title)
                 
+                TextField("Details", text: $todo.details, axis: .vertical)
+                    
+        
                 DatePicker("Deadline", selection: $todo.deadline, displayedComponents: [.date, .hourAndMinute])
             }
         }

@@ -2,11 +2,12 @@ import SwiftUI
 import SwiftData
 
 
-struct ToDoList: View {
+struct ToDoListView: View {
     
     @StateObject private var viewModel = ToDoListViewModel()
     @State var newTodo: ToDo? = nil
     @State var newTodoTitle = ""
+    @State var details = ""
     @State var newTodoDeadline = Date()
     
     var body: some View {
@@ -14,15 +15,15 @@ struct ToDoList: View {
             VStack {
                 List($viewModel.todos, id: \.self, editActions: .delete) { $todo in
                     NavigationLink(value: todo) {
-                    VStack(alignment: .leading) {
-                        Text(todo.title)
-                            .font(.headline)
-                        Text("Deadline: \(String.formattedDate(todo.deadline))")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
+                        VStack(alignment: .leading) {
+                            Text(todo.title)
+                                .font(.headline)
+                            Text("Deadline: \(String.formattedDate(todo.deadline))")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
                     }
                 }
-            }
                 .navigationTitle("To-Do List")
                 .navigationDestination(for: ToDo.self) { todo in
                     EditToDoView(todo: todo)
@@ -30,7 +31,7 @@ struct ToDoList: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
-                            newTodo = ToDo(title: "", deadline: .now)
+                            newTodo = ToDo(title: "", details: "", deadline: .now)
                         }) {
                             Image(systemName: "plus")
                         }
@@ -47,22 +48,23 @@ struct ToDoList: View {
                     VStack(spacing: 20) {
                         Spacer().frame(height: 10)
                         
-                        TextField("New Task", text: $newTodoTitle)
-                            .padding()
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(10)
-                            .textFieldStyle(PlainTextFieldStyle())
-                        
-                        DatePicker("Deadline", selection: $newTodoDeadline, displayedComponents: [.date, .hourAndMinute])
-                            .padding()
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(10)
+                        Form {
+                            Section {
+                                TextField("New Todo", text: $newTodoTitle)
+                                
+                                TextField("Details", text: $details)
+
+                            }
+                            
+                            DatePicker("Deadline", selection: $newTodoDeadline, displayedComponents: [.date, .hourAndMinute])
+                        }
                         
                         Spacer()
                         
                         SaveButton(text: "Save") {
                             todo.title = newTodoTitle
                             todo.deadline = newTodoDeadline
+                            todo.details = details
                             saveAction(todo)
                         }
                         .disabled(newTodoTitle.isEmpty)
@@ -89,7 +91,7 @@ struct ToDoList: View {
 
 
 #Preview {
-    ToDoList()
+    ToDoListView()
         .modelContainer(for: ToDo.self, inMemory: true)
 }
 
