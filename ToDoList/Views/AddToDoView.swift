@@ -1,10 +1,3 @@
-//
-//  AddTodo.swift
-//  ToDoList
-//
-//  Created by Shay Shimony on 09/01/2025.
-//
-
 import SwiftUI
 import SwiftUI
 
@@ -37,7 +30,6 @@ struct AddToDoView: View {
             }
         }
     }
-
 
 #Preview {
     AddToDoView(viewModel: ToDoListViewModel())
