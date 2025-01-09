@@ -20,16 +20,24 @@ struct AddToDoView: View {
                     
                     DatePicker("Deadline", selection: $deadline, displayedComponents: [.date, .hourAndMinute])
                 }
-                
-                Button("Save") {
-                    let newTodo = ToDo(title: title, details: details, deadline: deadline)
-                    viewModel.addNewToDo(newTodo: newTodo)
-                    dismiss() // חזרה למסך הקודם
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        saveAction()
+                    }
                 }
             }
             .navigationTitle("Add New Todo")
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+    
+    
+    func saveAction() {
+        let newTodo = ToDo(title: title, details: details, deadline: deadline)
+        viewModel.addNewToDo(newTodo: newTodo)
+        dismiss()
     }
 }
 

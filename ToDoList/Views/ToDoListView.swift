@@ -38,14 +38,6 @@ struct ToDoListView: View {
             }
         }
     }
-    
-    func saveAction(_ todo: ToDo) {
-        viewModel.addNewToDo(newTodo: todo)
-        newTodo = nil
-        newTodoTitle = ""
-        newTodoDeadline = Date()
-        details = ""
-    }
 }
 //
 //    private func deleteToDo(at offsets: IndexSet) {
