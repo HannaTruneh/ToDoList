@@ -1,6 +1,5 @@
 import Foundation
 
-
 class ToDoSections: ObservableObject {
     
     let id: UUID

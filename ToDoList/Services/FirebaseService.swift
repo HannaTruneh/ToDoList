@@ -1,7 +1,6 @@
 import Foundation
 import FirebaseFirestore
 
-
 struct FirebaseService {
     private let db = Firestore.firestore()
     

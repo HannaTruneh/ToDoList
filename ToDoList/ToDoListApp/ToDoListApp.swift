@@ -2,7 +2,6 @@ import SwiftUI
 import SwiftData
 import FirebaseCore
 
-
 @main
 struct ToDoListApp: App {
     
