@@ -1,10 +1,3 @@
-//
-//  Sections.swift
-//  ToDoList
-//
-//  Created by Hanna Truneh on 05/01/2025.
-//
-
 import Foundation
 
 

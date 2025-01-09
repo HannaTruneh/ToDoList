@@ -1,7 +1,6 @@
 import SwiftUI
 import SwiftData
 
-
 struct ToDoListView: View {
     
     @StateObject private var viewModel = ToDoListViewModel()
