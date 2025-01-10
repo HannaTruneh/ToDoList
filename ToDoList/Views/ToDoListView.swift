@@ -12,19 +12,38 @@ struct ToDoListView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                List($viewModel.todos, id: \.self, editActions: .delete) { $todo in
-                    NavigationLink(destination: EditToDoView(todo: todo)) {
-                        VStack(alignment: .leading) {
-                            Text(todo.title)
-                                .font(.headline)
-                            Text("Deadline: \(String.formattedDate(todo.deadline))")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
+                if viewModel.isLoading {
+                    ProgressView()
+                } else {
+                    List {
+                        ForEach (viewModel.todos, id: \.id) { todo in
+                            NavigationLink(destination: EditToDoView(todo: todo)) {
+                                VStack(alignment: .leading) {
+                                    Text(todo.title)
+                                        .font(.headline)
+                                    Text("Deadline: \(String.formattedDate(todo.deadline))")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                        }
+                        .onDelete { indexSet in
+                            for index in indexSet {
+                                let todo = viewModel.todos[index]
+                                viewModel.deleteTodo(id: todo.id)
+                            }
                         }
                     }
                 }
-                .navigationTitle("To-Do List")
             }
+        
+            .navigationTitle("To-Do List")
+            .onAppear {
+                Task {
+                    viewModel.getTodos()
+                }
+            }
+            .padding(.bottom)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     NavigationLink(destination: AddToDoView(viewModel: viewModel)) {
@@ -39,6 +58,7 @@ struct ToDoListView: View {
         }
     }
 }
+
 //
 //    private func deleteToDo(at offsets: IndexSet) {
 //        viewModel.deleteToDo(at: offsets)
@@ -48,9 +68,8 @@ struct ToDoListView: View {
 #Preview {
     ToDoListView()
         .modelContainer(for: ToDo.self, inMemory: true)
-        .environmentObject(ToDoSections(id: UUID(), name: "hi", numbersOfTodos: 1, todos: [ToDo(title: "Test", details: "Testies", deadline: Date())]))
+        .environmentObject(ToDoSections(id: UUID(), name: "hi", numbersOfTodos: 1, todos: [ToDo(id: "1234", title: "Test", details: "Testies", deadline: Date())]))
 }
-
 extension String {
     static func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()

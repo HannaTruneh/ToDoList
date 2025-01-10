@@ -35,7 +35,7 @@ struct AddToDoView: View {
     
     
     func saveAction() {
-        let newTodo = ToDo(title: title, details: details, deadline: deadline)
+        let newTodo = ToDo(id: "1234", title: title, details: details, deadline: deadline)
         viewModel.addNewToDo(newTodo: newTodo)
         dismiss()
     }

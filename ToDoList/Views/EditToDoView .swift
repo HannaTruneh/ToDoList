@@ -20,6 +20,6 @@ struct EditToDoView: View {
 }
 
 #Preview {
-    EditToDoView(todo: ToDo(title:"", details:"", deadline: Date()))
+    EditToDoView(todo: ToDo(id: "1234", title:"", details:"", deadline: Date()))
 }
 

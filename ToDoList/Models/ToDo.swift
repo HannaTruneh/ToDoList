@@ -3,16 +3,17 @@ import SwiftData
 
 @Model
 class ToDo {
+    var id: String
     var title: String
     var details: String
     var deadline: Date
     
     
-    init(title: String, details: String, deadline: Date) {
+    init(id: String, title: String, details: String, deadline: Date) {
+        self.id = UUID().uuidString
         self.title = title
         self.details = details
         self.deadline = deadline
-        
     }
 }
 
