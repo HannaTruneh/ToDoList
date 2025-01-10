@@ -43,7 +43,6 @@ struct ToDoListView: View {
                     viewModel.getTodos()
                 }
             }
-            .padding(.bottom)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     NavigationLink(destination: AddToDoView(viewModel: viewModel)) {
