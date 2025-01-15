@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 
+
 struct ToDoListView: View {
     
     @StateObject private var viewModel = ToDoListViewModel()
@@ -34,6 +35,7 @@ struct ToDoListView: View {
                             }
                         }
                     }
+                    .padding(.bottom)
                 }
             }
         
@@ -57,12 +59,6 @@ struct ToDoListView: View {
         }
     }
 }
-
-//
-//    private func deleteToDo(at offsets: IndexSet) {
-//        viewModel.deleteToDo(at: offsets)
-//    }
-//}
 
 #Preview {
     ToDoListView()

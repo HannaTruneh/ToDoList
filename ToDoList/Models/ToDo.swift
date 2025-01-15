@@ -17,3 +17,10 @@ class ToDo {
     }
 }
 
+class ToDoFirebase: Codable {
+    var id: String?
+    var title: String?
+    var details: String?
+    var deadline: Date?
+}
+
