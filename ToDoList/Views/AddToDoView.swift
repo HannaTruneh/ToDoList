@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftUI
 
 struct AddToDoView: View {
     
@@ -33,9 +32,8 @@ struct AddToDoView: View {
         }
     }
     
-    
     func saveAction() {
-        let newTodo = ToDo(id: "1234", title: title, details: details, deadline: deadline)
+        let newTodo = ToDo(id: UUID().uuidString, title: title, details: details, deadline: deadline)
         viewModel.addNewTodo(newTodo: newTodo)
         dismiss()
     }

@@ -5,10 +5,6 @@ import SwiftData
 struct ToDoListView: View {
     
     @StateObject private var viewModel = ToDoListViewModel()
-    @State var newTodo: ToDo? = nil
-    @State var newTodoTitle = ""
-    @State var details = ""
-    @State var newTodoDeadline = Date()
     
     var body: some View {
         NavigationStack {
@@ -38,7 +34,6 @@ struct ToDoListView: View {
                     .padding(.bottom)
                 }
             }
-        
             .navigationTitle("To-Do List")
             .onAppear {
                 Task {
@@ -51,7 +46,6 @@ struct ToDoListView: View {
                         Label("Add Todo", systemImage: "plus")
                     }
                 }
-                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
@@ -63,8 +57,8 @@ struct ToDoListView: View {
 #Preview {
     ToDoListView()
         .modelContainer(for: ToDo.self, inMemory: true)
-        .environmentObject(ToDoSections(id: UUID(), name: "hi", numbersOfTodos: 1, todos: [ToDo(id: "1234", title: "Test", details: "Testies", deadline: Date())]))
 }
+
 extension String {
     static func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
