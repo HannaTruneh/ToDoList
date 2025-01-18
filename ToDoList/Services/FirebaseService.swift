@@ -6,7 +6,7 @@ struct FirebaseService {
     
     private let db = Firestore.firestore()
     
-    func addTodo(todo: ToDo) async {
+    func createTodo(todo: ToDo) async {
         do {
             try await db.collection("todos").document(todo.id).setData([
                 "title": todo.title,
@@ -21,7 +21,22 @@ struct FirebaseService {
         }
     }
     
-    func getTodos() async -> [ToDo]? {
+    func updateTodo(todo: ToDo)  async {
+        do {
+            try await db.collection("todos").document(todo.id).updateData([
+            "lastUpdated": FieldValue.serverTimestamp(),
+            "title": todo.title,
+            "details": todo.details,
+            "deadline": todo.deadline
+            
+          ])
+          print("Document successfully updated")
+        } catch {
+          print("Error updating document: \(error)")
+        }
+    }
+    
+    func fetchAllTodos() async -> [ToDo]? {
         do {
             let querySnapshot = try await db.collection("todos").getDocuments()
             

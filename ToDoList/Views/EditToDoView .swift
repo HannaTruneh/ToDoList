@@ -12,24 +12,34 @@ struct EditToDoView: View {
     
     
     var body: some View {
-        Form {
-            Section {
-                TextField("Todo", text: $todo.title)
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("Todo", text: $todo.title)
+                    
+                    TextField("Details", text: $todo.details, axis: .vertical)
+                }
                 
-                TextField("Details", text: $todo.details, axis: .vertical)
-                
-                
-                DatePicker("Deadline", selection: $todo.deadline, displayedComponents: [.date, .hourAndMinute])
+                Section {
+                    
+                    DatePicker("Deadline", selection: $todo.deadline, displayedComponents: [.date, .hourAndMinute])
+                }
             }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        saveAction()
+                    }
+                }
+            }
+            .navigationTitle("Edit Todo")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationTitle("Edit Todo")
-        .navigationBarTitleDisplayMode(.inline)
-        
     }
 
     func saveAction() {
-        let newTodo = ToDo(id: UUID().uuidString, title: title, details: details, deadline: deadline)
-        viewModel.addNewTodo(newTodo: newTodo)
+        let todo = ToDo(id: todo.id, title: todo.title, details: todo.details, deadline: todo.deadline)
+        viewModel.updateTodo(todo: todo)
         dismiss()
     }
 }

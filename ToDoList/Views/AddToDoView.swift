@@ -16,7 +16,8 @@ struct AddToDoView: View {
                     TextField("Todo", text: $title)
                     
                     TextField("Details", text: $details, axis: .vertical)
-                    
+                }
+                    Section {
                     DatePicker("Deadline", selection: $deadline, displayedComponents: [.date, .hourAndMinute])
                 }
             }
@@ -34,7 +35,7 @@ struct AddToDoView: View {
     
     func saveAction() {
         let newTodo = ToDo(id: UUID().uuidString, title: title, details: details, deadline: deadline)
-        viewModel.addNewTodo(newTodo: newTodo)
+        viewModel.createTodo(newTodo: newTodo)
         dismiss()
     }
 }
