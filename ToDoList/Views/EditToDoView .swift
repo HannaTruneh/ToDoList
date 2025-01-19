@@ -47,4 +47,5 @@ struct EditToDoView: View {
 #Preview {
     EditToDoView(todo: ToDo(id: "", title:"", details:"", deadline: Date()))
 }
+                 
 

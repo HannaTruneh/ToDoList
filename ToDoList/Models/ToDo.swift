@@ -8,7 +8,6 @@ class ToDo {
     var details: String
     var deadline: Date
     
-    
     init(id: String, title: String, details: String, deadline: Date) {
         self.id = id
         self.title = title

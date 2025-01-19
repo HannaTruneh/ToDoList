@@ -12,7 +12,7 @@ struct FirebaseService {
                 "title": todo.title,
                 "details": todo.details,
                 "deadline": todo.deadline,
-                "id": todo.id
+                "id": todo.id,
                 
             ])
             print("Document successfully written!")
@@ -65,9 +65,7 @@ struct FirebaseService {
 //                         title: toDoFirebase.title ?? "",
 //                         details: toDoFirebase.details ?? "",
 //                         deadline: toDoFirebase.deadline ?? Date())
-//            }
-////            return todos.map { toDoFirebase in
-////                ToDo(id: toDoFirebase.id ?? "", title: toDoFirebase.title ?? "", details: toDoFirebase.details ?? "", deadline: toDoFirebase.deadline ?? Date()) 
+
             }
             return todos
             
