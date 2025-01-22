@@ -5,24 +5,35 @@ struct EditToDoView: View {
     @StateObject private var viewModel = ToDoListViewModel()
     @Environment(\.dismiss) private var dismiss
     
-    @State var todo: ToDo
+    @Binding var todo: ToDo
+    
     @State private var title = ""
     @State private var details = ""
     @State private var deadline = Date()
     
+    init(todo: ToDo) {
+            self._todo = Binding(get: { todo }, set: { _ in })
+            self._title = State(initialValue: todo.title ?? "")
+            self._details = State(initialValue: todo.details ?? "")
+            self._deadline = State(initialValue: todo.deadline ?? Date())
+        }
+    
+    var isSaveButtonEnabled: Bool {
+        todo.title != title || todo.details != details || todo.deadline != deadline
+    }
     
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Todo", text: $todo.title)
+                    TextField("Todo", text: $title)
                     
-                    TextField("Details", text: $todo.details, axis: .vertical)
+                    TextField("Details", text: $details, axis: .vertical)
                 }
                 
                 Section {
                     
-                    DatePicker("Deadline", selection: $todo.deadline, displayedComponents: [.date, .hourAndMinute])
+                    DatePicker("Deadline", selection: $deadline, displayedComponents: [.date, .hourAndMinute])
                 }
             }
             .toolbar {
@@ -30,6 +41,7 @@ struct EditToDoView: View {
                     Button("Save") {
                         saveAction()
                     }
+                    .disabled(!isSaveButtonEnabled)
                 }
             }
             .navigationTitle("Edit Todo")
@@ -38,7 +50,9 @@ struct EditToDoView: View {
     }
 
     func saveAction() {
-        let todo = ToDo(id: todo.id, title: todo.title, details: todo.details, deadline: todo.deadline)
+        todo.title = title
+        todo.details = details
+        todo.deadline = deadline
         viewModel.updateTodo(todo: todo)
         dismiss()
     }

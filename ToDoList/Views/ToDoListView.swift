@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftData
 
 
 struct ToDoListView: View {
@@ -16,9 +15,10 @@ struct ToDoListView: View {
                         ForEach (viewModel.todos, id: \.id) { todo in
                             NavigationLink(destination: EditToDoView(todo: todo)) {
                                 VStack(alignment: .leading) {
-                                    Text(todo.title)
+                                    Text(todo.title ?? "")
                                         .font(.headline)
-                                    Text("Deadline: \(String.formattedDate(todo.deadline))")
+                                    
+                                    Text("Deadline: \(String.formattedDate(todo.deadline ?? Date()))")
                                         .font(.subheadline)
                                         .foregroundColor(.gray)
                                 }
@@ -27,7 +27,7 @@ struct ToDoListView: View {
                         .onDelete { indexSet in
                             for index in indexSet {
                                 let todo = viewModel.todos[index]
-                                viewModel.deleteTodo(id: todo.id)
+                                viewModel.deleteTodo(id: todo.id ?? "")
                             }
                         }
                     }
@@ -46,8 +46,10 @@ struct ToDoListView: View {
                         Label("Add Todo", systemImage: "plus")
                     }
                 }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
+                    
                 }
             }
         }
@@ -56,7 +58,6 @@ struct ToDoListView: View {
 
 #Preview {
     ToDoListView()
-        .modelContainer(for: ToDo.self, inMemory: true)
 }
 
 extension String {
