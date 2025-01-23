@@ -9,6 +9,10 @@ struct AddToDoView: View {
     @State private var details = ""
     @State private var deadline = Date()
     
+    var isSaveButtonEnabled: Bool {
+        !title.isEmpty 
+    }
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -26,6 +30,7 @@ struct AddToDoView: View {
                     Button("Save") {
                         saveAction()
                     }
+                    .disabled(!isSaveButtonEnabled)
                 }
             }
             .navigationTitle("Add New Todo")

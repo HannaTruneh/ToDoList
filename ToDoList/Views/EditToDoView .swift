@@ -5,21 +5,18 @@ struct EditToDoView: View {
     @StateObject private var viewModel = ToDoListViewModel()
     @Environment(\.dismiss) private var dismiss
     
-    @Binding var todo: ToDo
+    var todo: ToDo
     
     @State private var title = ""
     @State private var details = ""
     @State private var deadline = Date()
     
     init(todo: ToDo) {
-            self._todo = Binding(get: { todo }, set: { _ in })
-            self._title = State(initialValue: todo.title ?? "")
-            self._details = State(initialValue: todo.details ?? "")
-            self._deadline = State(initialValue: todo.deadline ?? Date())
-        }
+           self.todo = todo
+       }
     
     var isSaveButtonEnabled: Bool {
-        todo.title != title || todo.details != details || todo.deadline != deadline
+        todo.title != title || todo.details != details || todo.deadline != deadline && !title.isEmpty
     }
     
     var body: some View {
@@ -46,8 +43,17 @@ struct EditToDoView: View {
             }
             .navigationTitle("Edit Todo")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                updateFieldsFromTodo()
+            }
         }
     }
+    
+    func updateFieldsFromTodo() {
+            title = todo.title ?? ""
+            details = todo.details ?? ""
+            deadline = todo.deadline ?? Date()
+        }
 
     func saveAction() {
         todo.title = title

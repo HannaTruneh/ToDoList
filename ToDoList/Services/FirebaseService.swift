@@ -8,11 +8,11 @@ struct FirebaseService {
     
     func createTodo(todo: ToDo) async {
         do {
-            try await db.collection("todos").document(todo.id ?? "").setData([
+            try await db.collection("todos").document(todo.id).setData([
                 "title": todo.title ?? "",
                 "details": todo.details ?? "",
                 "deadline": todo.deadline ?? Date(),
-                "id": todo.id ?? ""
+                "id": todo.id
                 
             ])
             print("Document successfully written!")
@@ -22,12 +22,12 @@ struct FirebaseService {
     }
     
     func updateTodo(todo: ToDo) async {
-        guard let todoId = todo.id, !todoId.isEmpty else {
-            print("Error: Todo ID is missing.")
-            return
-        }
+//        guard let todoId = todo.id, !todoId.isEmpty else {
+//            print("Error: Todo ID is missing.")
+//            return
+//        }
         do {
-            try await db.collection("todos").document(todoId).updateData([
+            try await db.collection("todos").document(todo.id).updateData([
                 "lastUpdated": FieldValue.serverTimestamp(),
                 "title": todo.title ?? "",
                 "details": todo.details ?? "",
@@ -46,7 +46,7 @@ struct FirebaseService {
                 try document.data(as: ToDo.self)
             }
             return todos.map { todo in
-                ToDo(id: todo.id ?? "",
+                ToDo(id: todo.id,
                      title: todo.title ?? "",
                      details: todo.details ?? "",
                      deadline: todo.deadline ?? Date())

@@ -6,6 +6,7 @@ struct ToDoListView: View {
     @StateObject private var viewModel = ToDoListViewModel()
     
     var body: some View {
+        
         NavigationStack {
             VStack {
                 if viewModel.isLoading {
@@ -27,11 +28,13 @@ struct ToDoListView: View {
                         .onDelete { indexSet in
                             for index in indexSet {
                                 let todo = viewModel.todos[index]
-                                viewModel.deleteTodo(id: todo.id ?? "")
+                                viewModel.deleteTodo(id: todo.id)
                             }
                         }
                     }
-                    .padding(.bottom)
+                    .scrollContentBackground(.hidden)
+                    .background(Color("background"))
+//                    .padding(.bottom)
                 }
             }
             .navigationTitle("To-Do List")
@@ -46,15 +49,11 @@ struct ToDoListView: View {
                         Label("Add Todo", systemImage: "plus")
                     }
                 }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                    
-                }
             }
         }
     }
 }
+
 
 #Preview {
     ToDoListView()
