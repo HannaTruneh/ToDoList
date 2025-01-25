@@ -1,9 +1,9 @@
 import SwiftUI
 
 
-struct ToDoListView: View {
+struct ListView: View {
     
-    @StateObject private var viewModel = ToDoListViewModel()
+    @StateObject private var viewModel = ListViewModel()
     
     var body: some View {
         
@@ -11,19 +11,25 @@ struct ToDoListView: View {
             VStack {
                 if viewModel.isLoading {
                     ProgressView()
+                }
+                else if viewModel.todos.isEmpty {
+                    NoTodosView(viewModel: viewModel)
+                    
                 } else {
+                    
                     List {
                         ForEach (viewModel.todos, id: \.id) { todo in
-                            NavigationLink(destination: EditToDoView(todo: todo)) {
-                                VStack(alignment: .leading) {
-                                    Text(todo.title ?? "")
-                                        .font(.headline)
-                                    
-                                    Text("Deadline: \(String.formattedDate(todo.deadline ?? Date()))")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
+                            NavigationLink(destination: EditView(todo: todo)) {
+                                ListRowView(todo: todo)
+                                    .onTapGesture {
+                                        Task {
+                                            viewModel.updateCompletion(todo: todo)
+                                    }
                                 }
                             }
+                            .buttonStyle(PlainButtonStyle())
+                            .listStyle(PlainListStyle())
+                            .opacity(1)
                         }
                         .onDelete { indexSet in
                             for index in indexSet {
@@ -34,7 +40,6 @@ struct ToDoListView: View {
                     }
                     .scrollContentBackground(.hidden)
                     .background(Color("background"))
-//                    .padding(.bottom)
                 }
             }
             .navigationTitle("To-Do List")
@@ -45,8 +50,10 @@ struct ToDoListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    NavigationLink(destination: AddToDoView(viewModel: viewModel)) {
+                    NavigationLink(destination: AddView(viewModel: viewModel)) {
                         Label("Add Todo", systemImage: "plus")
+                            .imageScale(.large)
+                            .scaleEffect(3)
                     }
                 }
             }
@@ -56,7 +63,7 @@ struct ToDoListView: View {
 
 
 #Preview {
-    ToDoListView()
+    ListView()
 }
 
 extension String {

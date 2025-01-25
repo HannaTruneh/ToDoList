@@ -4,7 +4,7 @@ import FirebaseFirestore
 
 struct FirebaseService {
     
-    private let db = Firestore.firestore()
+private let db = Firestore.firestore()
     
     func createTodo(todo: ToDo) async {
         do {
@@ -12,7 +12,8 @@ struct FirebaseService {
                 "title": todo.title ?? "",
                 "details": todo.details ?? "",
                 "deadline": todo.deadline ?? Date(),
-                "id": todo.id
+                "id": todo.id,
+                "isCompleted": false
                 
             ])
             print("Document successfully written!")
@@ -22,10 +23,6 @@ struct FirebaseService {
     }
     
     func updateTodo(todo: ToDo) async {
-//        guard let todoId = todo.id, !todoId.isEmpty else {
-//            print("Error: Todo ID is missing.")
-//            return
-//        }
         do {
             try await db.collection("todos").document(todo.id).updateData([
                 "lastUpdated": FieldValue.serverTimestamp(),
@@ -39,9 +36,21 @@ struct FirebaseService {
         }
     }
     
+    func updateCompletion(todo: ToDo)  async {
+        do {
+            try await db.collection("todos").document(todo.id).updateData([
+                "isCompleted": !todo.isCompleted
+            ])
+            print("Document successfully updated")
+            
+        } catch {
+            print("Error updating document: \(error)")
+        }
+    }
+    
     func fetchAllTodos() async -> [ToDo]? {
         do {
-            let querySnapshot = try await db.collection("todos").getDocuments()
+            let querySnapshot = try await db.collection("todos").whereField("isCompleted", isEqualTo: false).getDocuments()
             let todos: [ToDo] = try querySnapshot.documents.compactMap { document in
                 try document.data(as: ToDo.self)
             }

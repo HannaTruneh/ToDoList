@@ -1,22 +1,16 @@
 import SwiftUI
 
-struct EditToDoView: View {
+struct AddView: View {
     
-    @StateObject private var viewModel = ToDoListViewModel()
+    @ObservedObject var viewModel: ListViewModel
     @Environment(\.dismiss) private var dismiss
-    
-    var todo: ToDo
     
     @State private var title = ""
     @State private var details = ""
     @State private var deadline = Date()
     
-    init(todo: ToDo) {
-           self.todo = todo
-       }
-    
     var isSaveButtonEnabled: Bool {
-        todo.title != title || todo.details != details || todo.deadline != deadline && !title.isEmpty
+        !title.isEmpty 
     }
     
     var body: some View {
@@ -27,9 +21,7 @@ struct EditToDoView: View {
                     
                     TextField("Details", text: $details, axis: .vertical)
                 }
-                
-                Section {
-                    
+                    Section {
                     DatePicker("Deadline", selection: $deadline, displayedComponents: [.date, .hourAndMinute])
                 }
             }
@@ -41,31 +33,18 @@ struct EditToDoView: View {
                     .disabled(!isSaveButtonEnabled)
                 }
             }
-            .navigationTitle("Edit Todo")
+            .navigationTitle("Add New Todo")
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                updateFieldsFromTodo()
-            }
         }
     }
     
-    func updateFieldsFromTodo() {
-            title = todo.title ?? ""
-            details = todo.details ?? ""
-            deadline = todo.deadline ?? Date()
-        }
-
     func saveAction() {
-        todo.title = title
-        todo.details = details
-        todo.deadline = deadline
-        viewModel.updateTodo(todo: todo)
+        let newTodo = ToDo(id: UUID().uuidString, title: title, details: details, deadline: deadline)
+        viewModel.createTodo(newTodo: newTodo)
         dismiss()
     }
 }
 
 #Preview {
-    EditToDoView(todo: ToDo(id: "", title:"", details:"", deadline: Date()))
+    AddView(viewModel: ListViewModel())
 }
-                 
-
