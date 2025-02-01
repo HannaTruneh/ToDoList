@@ -6,10 +6,6 @@ struct ListView: View {
     
     @State private var showAddTodoSheet = false
     
-    let colums = [
-        GridItem(.adaptive(minimum: 150))
-    ]
-    
     var body: some View {
         NavigationStack {
             VStack {
@@ -20,9 +16,9 @@ struct ListView: View {
                         NoTodosView(viewModel: viewModel)
                     } else {
                         List {
-                            SectionView(viewModel: viewModel, name: "Pending", todos: viewModel.pendingTodos)
-                            
-                            SectionView(viewModel: viewModel, name: "Completed", todos: viewModel.completedTodos)
+                            ForEach(viewModel.sections, id: \.name) { section in
+                                SectionView(viewModel: viewModel, section: section)
+                            }
                         }
                     }
                 }
@@ -47,8 +43,8 @@ struct ListView: View {
                 }
             }
             .sheet(isPresented: $showAddTodoSheet) {
-                        AddView(viewModel: viewModel)
-                    }
+                AddView(viewModel: viewModel)
+            }
             .onAppear {
                 UINavigationBar.appearance().largeTitleTextAttributes = [
                     .font: UIFont(name: "Avenir", size: 30) ?? UIFont.boldSystemFont(ofSize: 40)

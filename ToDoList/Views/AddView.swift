@@ -20,8 +20,9 @@ struct AddView: View {
             Form {
                 Section {
                     TextField("Title", text: $title)
+                        .focused($isTextFieldFocused)
                         .onAppear {
-                            isTextFieldFocused = true
+                            isTextFieldFocused = true // Keyboard doesn't appear
                         }
                     
                     TextField("Notes", text: $notes, axis: .vertical)
@@ -64,3 +65,5 @@ struct AddView: View {
 #Preview {
     AddView(viewModel: ListViewModel())
 }
+
+

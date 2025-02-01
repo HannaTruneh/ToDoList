@@ -4,14 +4,12 @@ struct SectionView: View {
     
     @ObservedObject var viewModel: ListViewModel
     
-    
-    var name: String
-    var todos: [ToDo]
+    var section: ListSection
     
     var body: some View {
         
-        Section(header: Text(name).font(.headline)) {
-            ForEach(todos, id: \.id) { todo in
+        Section(header: Text(section.name).font(.headline)) {
+            ForEach(section.todos, id: \.id) { todo in
                 NavigationLink(destination: EditView(todo: todo)) {
                     ListRowView(todo: todo)
                         .onTapGesture {
@@ -27,7 +25,7 @@ struct SectionView: View {
             }
             .onDelete { indexSet in
                 for index in indexSet {
-                    let todo = todos[index]
+                    let todo = section.todos[index]
                     viewModel.deleteTodo(id: todo.id)
                 }
             }
@@ -36,5 +34,5 @@ struct SectionView: View {
 }
 
 #Preview {
-    SectionView(viewModel: ListViewModel(), name: "Com", todos: [ToDo(id: "123", title: "TODO", notes: "", dueDate: Date(), isCompleted: true)])
+    SectionView(viewModel: ListViewModel(), section: ListSection(name: "Com", todos: [ToDo(id: "123", title: "TODO", notes: "", dueDate: Date(), isCompleted: true)]))
 }

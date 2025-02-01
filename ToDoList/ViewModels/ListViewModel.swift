@@ -8,21 +8,15 @@ class ListViewModel: ObservableObject {
     @Published var todos: [ToDo] = []
     @Published var pendingTodos: [ToDo] = []
     @Published var completedTodos: [ToDo] = []
+    @Published var sections: [ListSection] = []
     
     let firebaseService = FirebaseService()
-    
-    
-    //    func createTodo(newTodo: ToDo) {
-    //        todos.append(newTodo)
-    //        Task {
-    //            await firebaseService.createTodo(todo: newTodo)
-    //        }
-    //    }
     
     func createTodo(newTodo: ToDo) {
         DispatchQueue.main.async {
             
             self.pendingTodos.append(newTodo)
+            self.updateSections()
         }
         
         Task {
@@ -48,6 +42,7 @@ class ListViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self.pendingTodos = self.todos.filter { !$0.isCompleted }
                 self.completedTodos = self.todos.filter { $0.isCompleted }
+                self.updateSections()
             }
         }
     }
@@ -56,16 +51,17 @@ class ListViewModel: ObservableObject {
         DispatchQueue.main.async {
             self.isLoading = true
         }
+        
         Task {
             if let todosList = await firebaseService.fetchAllTodos() {
                 let pending = todosList.filter { !$0.isCompleted }
                 let completed = todosList.filter { $0.isCompleted }
                 
                 DispatchQueue.main.async {
-                    
                     self.pendingTodos = pending
                     self.completedTodos = completed
                     self.todos = todosList
+                    self.updateSections()
                     self.isLoading = false
                 }
             } else {
@@ -80,14 +76,22 @@ class ListViewModel: ObservableObject {
         Task {
             await firebaseService.deleteTodo(id: id)
             
-            if let index = todos.firstIndex(where: { $0.id == id }) {
-                todos.remove(at: index)
-            }
-        
             DispatchQueue.main.async {
-                self.pendingTodos = self.todos
-                self.completedTodos = self.todos
+                self.todos = self.todos.filter { $0.id != id }
+                self.pendingTodos = self.todos.filter { !$0.isCompleted }
+                self.completedTodos = self.todos.filter { $0.isCompleted }
+                self.updateSections()
             }
         }
     }
+
+    func updateSections() {
+        let pendingSection = ListSection(name: "", todos: self.pendingTodos)
+        let completedSection = ListSection(name: "Completed", todos: self.completedTodos)
+        
+        self.sections = [pendingSection, completedSection]
+    }
 }
+
+
+
