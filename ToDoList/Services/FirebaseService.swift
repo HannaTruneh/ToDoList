@@ -10,8 +10,8 @@ private let db = Firestore.firestore()
         do {
             try await db.collection("todos").document(todo.id).setData([
                 "title": todo.title ?? "",
-                "details": todo.details ?? "",
-                "deadline": todo.deadline ?? Date(),
+                "notes": todo.notes ?? "",
+                "dueDate": todo.dueDate ?? Date(),
                 "id": todo.id,
                 "isCompleted": false
                 
@@ -27,8 +27,8 @@ private let db = Firestore.firestore()
             try await db.collection("todos").document(todo.id).updateData([
                 "lastUpdated": FieldValue.serverTimestamp(),
                 "title": todo.title ?? "",
-                "details": todo.details ?? "",
-                "deadline": todo.deadline ?? Date()
+                "notes": todo.notes ?? "",
+                "dueDate": todo.dueDate ?? Date()
             ])
             print("Document successfully updated")
         } catch {
@@ -50,15 +50,16 @@ private let db = Firestore.firestore()
     
     func fetchAllTodos() async -> [ToDo]? {
         do {
-            let querySnapshot = try await db.collection("todos").whereField("isCompleted", isEqualTo: false).getDocuments()
+            let querySnapshot = try await db.collection("todos").getDocuments()
             let todos: [ToDo] = try querySnapshot.documents.compactMap { document in
                 try document.data(as: ToDo.self)
             }
             return todos.map { todo in
                 ToDo(id: todo.id,
                      title: todo.title ?? "",
-                     details: todo.details ?? "",
-                     deadline: todo.deadline ?? Date())
+                     notes: todo.notes ?? "",
+                     dueDate: todo.dueDate ?? Date(),
+                     isCompleted: todo.isCompleted)
             }
             
         } catch {

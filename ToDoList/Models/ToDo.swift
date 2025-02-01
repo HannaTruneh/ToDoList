@@ -1,19 +1,19 @@
 import Foundation
 
 
-class ToDo:  Codable {
+class ToDo:  Codable, Identifiable {
     var id: String
     var title: String?
-    var details: String?
-    var deadline: Date?
+    var notes: String?
+    var dueDate: Date?
     var isCompleted: Bool
     
-    init(id: String, title: String? = "", details: String? = "", deadline: Date? = Date()) {
+    init(id: String, title: String? = "", notes: String? = "", dueDate: Date? = Date(), isCompleted: Bool) {
         self.id = id
         self.title = title
-        self.details = details
-        self.deadline = deadline
-        self.isCompleted = false
+        self.notes = notes
+        self.dueDate = dueDate
+        self.isCompleted = isCompleted
     }
 }
 

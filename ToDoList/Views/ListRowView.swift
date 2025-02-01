@@ -1,5 +1,3 @@
-
-
 import SwiftUI
 
 struct ListRowView: View {
@@ -18,17 +16,17 @@ struct ListRowView: View {
                     .font(.custom("Avenir", size: 20))
                     .foregroundColor(.primary)
                     .lineLimit(2)
-//                HStack {
-//                    Image(systemName: "calendar")
-//                    Text("\(String.formattedDate(todo.deadline ?? Date()))")
-//                        .font(.custom("Avenir", size: 15))
-//                        .foregroundColor(.gray)
-//                }
+                //                HStack {
+                //                    Image(systemName: "calendar")
+                //                    Text("\(String.formattedDate(todo.deadline ?? Date()))")
+                //                        .font(.custom("Avenir", size: 15))
+                //                        .foregroundColor(.gray)
+                //                }
             }
         }
     }
-    
 }
-    #Preview {
-        ListRowView(todo:ToDo(id: "", title:"Test", details:"", deadline: Date()))
-    }
+
+#Preview {
+    ListRowView(todo:ToDo(id: "", title:"Test", notes:"", dueDate: Date(), isCompleted: true))
+}

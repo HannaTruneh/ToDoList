@@ -1,47 +1,34 @@
 import SwiftUI
 
-
 struct ListView: View {
     
-    @StateObject private var viewModel = ListViewModel()
+    @ObservedObject var viewModel = ListViewModel()
+    
+    @State private var showAddTodoSheet = false
+    
+    let colums = [
+        GridItem(.adaptive(minimum: 150))
+    ]
     
     var body: some View {
-        
         NavigationStack {
             VStack {
                 if viewModel.isLoading {
                     ProgressView()
-                }
-                else if viewModel.todos.isEmpty {
-                    NoTodosView(viewModel: viewModel)
-                    
                 } else {
-                    
-                    List {
-                        ForEach (viewModel.todos, id: \.id) { todo in
-                            NavigationLink(destination: EditView(todo: todo)) {
-                                ListRowView(todo: todo)
-                                    .onTapGesture {
-                                        Task {
-                                            viewModel.updateCompletion(todo: todo)
-                                    }
-                                }
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                            .listStyle(PlainListStyle())
-                            .opacity(1)
-                        }
-                        .onDelete { indexSet in
-                            for index in indexSet {
-                                let todo = viewModel.todos[index]
-                                viewModel.deleteTodo(id: todo.id)
-                            }
+                    if viewModel.todos.isEmpty {
+                        NoTodosView(viewModel: viewModel)
+                    } else {
+                        List {
+                            SectionView(viewModel: viewModel, name: "Pending", todos: viewModel.pendingTodos)
+                            
+                            SectionView(viewModel: viewModel, name: "Completed", todos: viewModel.completedTodos)
                         }
                     }
-                    .scrollContentBackground(.hidden)
-                    .background(Color("background"))
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(Color("background"))
             .navigationTitle("To-Do List")
             .onAppear {
                 Task {
@@ -50,18 +37,26 @@ struct ListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    NavigationLink(destination: AddView(viewModel: viewModel)) {
+                    Button(action: {
+                        showAddTodoSheet.toggle()
+                    }) {
                         Label("Add Todo", systemImage: "plus")
                             .imageScale(.large)
                             .scaleEffect(3)
                     }
                 }
             }
+            .sheet(isPresented: $showAddTodoSheet) {
+                        AddView(viewModel: viewModel)
+                    }
+            .onAppear {
+                UINavigationBar.appearance().largeTitleTextAttributes = [
+                    .font: UIFont(name: "Avenir", size: 30) ?? UIFont.boldSystemFont(ofSize: 40)
+                ]
+            }
         }
     }
 }
-
-
 #Preview {
     ListView()
 }
