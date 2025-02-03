@@ -45,7 +45,6 @@ struct NoTodosView: View {
         .sheet(isPresented: $showAddTodoSheet) {
                     AddView(viewModel: viewModel)
                 }
-        
     }
     
     func addAnimation() {
@@ -61,6 +60,7 @@ struct NoTodosView: View {
         }
     }
 }
+
 #Preview {
     NavigationView{
         NoTodosView(viewModel: ListViewModel())

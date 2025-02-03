@@ -2,7 +2,7 @@ import SwiftUI
 
 struct EditView: View {
     
-    @StateObject private var viewModel = ListViewModel()
+    @ObservedObject private var viewModel = ListViewModel()
     @Environment(\.dismiss) private var dismiss
     
     var todo: ToDo
