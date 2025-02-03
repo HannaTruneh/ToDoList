@@ -3,14 +3,22 @@ import Foundation
 
 class ListViewModel: ObservableObject {
     
-    @Published var isLoading: Bool = false
     @Published var showAddTodoSheet: Bool = false
     @Published var todos: [ToDo] = []
     @Published var pendingTodos: [ToDo] = []
     @Published var completedTodos: [ToDo] = []
     @Published var sections: [ListSection] = []
+    @Published var viewState: ViewState = .loading
+    
+    enum ViewState: Equatable {
+        case loading
+        case loaded
+        case empty
+    }
     
     let firebaseService = FirebaseService()
+    
+    
     
     func createTodo(newTodo: ToDo) {
         DispatchQueue.main.async {
@@ -49,7 +57,7 @@ class ListViewModel: ObservableObject {
     
     func getTodos() {
         DispatchQueue.main.async {
-            self.isLoading = true
+            self.viewState = .loading
         }
         
         Task {
@@ -62,11 +70,11 @@ class ListViewModel: ObservableObject {
                     self.completedTodos = completed
                     self.todos = todosList
                     self.updateSections()
-                    self.isLoading = false
+                    self.viewState = todosList.isEmpty ? .empty : .loaded
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.isLoading = false
+                    self.viewState = .empty
                 }
             }
         }
@@ -81,12 +89,18 @@ class ListViewModel: ObservableObject {
                 self.pendingTodos = self.todos.filter { !$0.isCompleted }
                 self.completedTodos = self.todos.filter { $0.isCompleted }
                 self.updateSections()
+                
+                if self.todos.isEmpty {
+                    self.viewState = .empty
+                } else {
+                    self.viewState = .loaded
+                }
             }
         }
     }
-
+    
     func updateSections() {
-        let pendingSection = ListSection(name: "", todos: self.pendingTodos)
+        let pendingSection = ListSection(name: "Pending", todos: self.pendingTodos)
         let completedSection = ListSection(name: "Completed", todos: self.completedTodos)
         
         self.sections = [pendingSection, completedSection]

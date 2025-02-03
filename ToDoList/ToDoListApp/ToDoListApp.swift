@@ -9,7 +9,7 @@ struct ToDoListApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ListView()
+            ContentView()
         }
     }
 }

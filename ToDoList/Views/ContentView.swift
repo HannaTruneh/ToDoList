@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ListView: View {
+struct ContentView: View {
     
     @ObservedObject var viewModel = ListViewModel()
     
@@ -9,24 +9,24 @@ struct ListView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                if viewModel.isLoading {
+                switch viewModel.viewState {
+                case .loading:
                     ProgressView()
-                } else {
-                    if viewModel.todos.isEmpty {
-                        NoTodosView(viewModel: viewModel)
-                    } else {
-                        List {
-                            ForEach(viewModel.sections, id: \.name) { section in
-                                SectionView(viewModel: viewModel, section: section)
-                            }
-                        }
-                    }
+                    
+                case .empty:
+                    EmptyStateView(viewModel: viewModel)
+                    
+                case .loaded:
+                    ToDoListView(viewModel: viewModel)
                 }
             }
             .scrollContentBackground(.hidden)
             .background(Color("background"))
             .navigationTitle("To-Do List")
             .onAppear {
+                UINavigationBar.appearance().largeTitleTextAttributes = [
+                    .font: UIFont(name: "Avenir", size: 30) ?? UIFont.boldSystemFont(ofSize: 40)
+                ]
                 Task {
                     viewModel.getTodos()
                 }
@@ -45,17 +45,12 @@ struct ListView: View {
             .sheet(isPresented: $showAddTodoSheet) {
                 AddView(viewModel: viewModel)
             }
-            .onAppear {
-                UINavigationBar.appearance().largeTitleTextAttributes = [
-                    .font: UIFont(name: "Avenir", size: 30) ?? UIFont.boldSystemFont(ofSize: 40)
-                ]
-            }
         }
     }
 }
 
 #Preview {
-    ListView()
+    ContentView()
 }
 
 extension String {

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct NoTodosView: View {
+struct EmptyStateView: View {
     
     @ObservedObject var viewModel: ListViewModel
     
@@ -63,7 +63,7 @@ struct NoTodosView: View {
 
 #Preview {
     NavigationView{
-        NoTodosView(viewModel: ListViewModel())
+        EmptyStateView(viewModel: ListViewModel())
     }
 }
 
