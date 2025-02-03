@@ -36,8 +36,6 @@ struct EmptyStateView: View {
             .multilineTextAlignment(.center)
             .padding(50)
             .onAppear(perform: addAnimation)
-            
-            
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .scrollContentBackground(.hidden)
